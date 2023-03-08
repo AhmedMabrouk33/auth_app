@@ -1,0 +1,34 @@
+{
+  "kind": "collectionType",
+  "collectionName": "clientlocations",
+  "info": {
+    "singularName": "clientlocation",
+    "pluralName": "clientlocations",
+    "displayName": "clientlocation",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "buildingno": {
+      "type": "biginteger"
+    },
+    "floorno": {
+      "type": "biginteger"
+    },
+    "address": {
+      "type": "string"
+    },
+    "area": {
+      "type": "string"
+    },
+    "city": {
+      "type": "string"
+    }
+  }
+}
