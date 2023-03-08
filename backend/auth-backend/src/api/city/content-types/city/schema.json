@@ -1,0 +1,27 @@
+{
+  "kind": "collectionType",
+  "collectionName": "cities",
+  "info": {
+    "singularName": "city",
+    "pluralName": "cities",
+    "displayName": "city",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "nameen": {
+      "type": "string"
+    },
+    "namear": {
+      "type": "string"
+    },
+    "areas": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::area.area"
+    }
+  }
+}

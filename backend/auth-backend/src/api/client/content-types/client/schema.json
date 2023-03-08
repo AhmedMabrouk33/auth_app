@@ -1,0 +1,45 @@
+{
+  "kind": "collectionType",
+  "collectionName": "clients",
+  "info": {
+    "singularName": "client",
+    "pluralName": "clients",
+    "displayName": "client",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "phoneno": {
+      "type": "string"
+    },
+    "dateofbirth": {
+      "type": "string"
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user",
+      "mappedBy": "client"
+    },
+    "clientlocations": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::clientlocation.clientlocation",
+      "mappedBy": "client"
+    }
+  }
+}
