@@ -1,0 +1,13 @@
+{
+    "jwt": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjc4MjQ2MDU1LCJleHAiOjE2ODA4MzgwNTV9.BrpBEXcVuOUTECNV2mNkiJTG-wJ27wIvgrsM649Dt2o",
+    "user": {
+        "id": 1,
+        "username": "postman test",
+        "email": "junk@postman.com",
+        "provider": "local",
+        "confirmed": true,
+        "blocked": false,
+        "createdAt": "2023-03-08T02:34:01.929Z",
+        "updatedAt": "2023-03-08T02:34:01.929Z"
+    }
+}
