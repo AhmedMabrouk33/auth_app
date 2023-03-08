@@ -1,0 +1,83 @@
+{
+    "data": [
+        {
+            "id": 1,
+            "attributes": {
+                "nameen": "Cairo",
+                "namear": "القاهرة",
+                "createdAt": "2023-03-08T00:49:06.343Z",
+                "updatedAt": "2023-03-08T00:49:06.343Z",
+                "areas": {
+                    "data": [
+                        {
+                            "id": 3,
+                            "attributes": {
+                                "nameen": "New Cairo",
+                                "namear": "القاهرة الجديدة",
+                                "createdAt": "2023-03-08T00:44:30.897Z",
+                                "updatedAt": "2023-03-08T00:44:30.897Z"
+                            }
+                        },
+                        {
+                            "id": 2,
+                            "attributes": {
+                                "nameen": "Maadi",
+                                "namear": "المعادي",
+                                "createdAt": "2023-03-08T00:43:46.899Z",
+                                "updatedAt": "2023-03-08T00:43:46.899Z"
+                            }
+                        },
+                        {
+                            "id": 1,
+                            "attributes": {
+                                "nameen": "Helwan",
+                                "namear": "حلوان",
+                                "createdAt": "2023-03-08T00:42:51.838Z",
+                                "updatedAt": "2023-03-08T00:42:51.838Z"
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 2,
+            "attributes": {
+                "nameen": "Giza",
+                "namear": "الجيزة ",
+                "createdAt": "2023-03-08T00:49:41.302Z",
+                "updatedAt": "2023-03-08T00:49:41.302Z",
+                "areas": {
+                    "data": [
+                        {
+                            "id": 4,
+                            "attributes": {
+                                "nameen": "6th of October",
+                                "namear": "السادس من أكتوبر",
+                                "createdAt": "2023-03-08T00:47:05.504Z",
+                                "updatedAt": "2023-03-08T00:47:05.504Z"
+                            }
+                        },
+                        {
+                            "id": 5,
+                            "attributes": {
+                                "nameen": "Mohandessin",
+                                "namear": "المهندسين",
+                                "createdAt": "2023-03-08T00:47:47.136Z",
+                                "updatedAt": "2023-03-08T00:47:47.136Z"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    ],
+    "meta": {
+        "pagination": {
+            "page": 1,
+            "pageSize": 25,
+            "pageCount": 1,
+            "total": 2
+        }
+    }
+}

@@ -38,7 +38,8 @@
     "clientlocations": {
       "type": "relation",
       "relation": "oneToMany",
-      "target": "api::clientlocation.clientlocation"
+      "target": "api::clientlocation.clientlocation",
+      "mappedBy": "client"
     }
   }
 }

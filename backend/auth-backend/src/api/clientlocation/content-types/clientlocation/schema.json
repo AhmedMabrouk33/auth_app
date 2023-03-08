@@ -29,6 +29,12 @@
     },
     "city": {
       "type": "string"
+    },
+    "client": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::client.client",
+      "inversedBy": "clientlocations"
     }
   }
 }
