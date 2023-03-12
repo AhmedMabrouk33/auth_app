@@ -1,10 +1,8 @@
 part of 'appsetting_cubit.dart';
 
 class AppSettingState extends Equatable {
-  final String languageSetting;
-  const AppSettingState(
-    this.languageSetting,
-  );
+  String languageSetting;
+  AppSettingState(this.languageSetting);
 
   @override
   List<Object> get props => [languageSetting];
@@ -20,4 +18,6 @@ class AppSettingState extends Equatable {
       map['languageSetting'] ?? '',
     );
   }
+
+  
 }
