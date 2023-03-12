@@ -41,6 +41,9 @@ class DioPostWebRequestService implements PostWebRequestServices {
       );
 
       RESPONSE_MAP_TYPE responseBody = jsonResponse.data;
+      dioConnection.options.headers[HttpHeaders.authorizationHeader] =
+          'Bearer' + responseBody['jwt'];
+      responseBody.remove('jwt');
       responseBody[RESPONSE_STATUS_CODE_KEY] = jsonResponse.statusCode;
       return responseBody;
     } catch (error) {

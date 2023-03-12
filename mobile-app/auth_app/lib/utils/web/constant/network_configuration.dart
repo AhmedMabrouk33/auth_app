@@ -3,8 +3,6 @@ import 'package:dio/dio.dart';
 
 import 'network_constants.dart';
 
-typedef RESPONSE_MAP_TYPE = Map<String, dynamic>;
-
 final Dio dioConnection = Dio(dioConnectionBaseOptions);
 
 BaseOptions dioConnectionBaseOptions = BaseOptions(
