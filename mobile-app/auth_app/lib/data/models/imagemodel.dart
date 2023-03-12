@@ -7,10 +7,7 @@ import '../../utils/web/constant/network_constants.dart' show BASE_URL;
 class ImageModel {
   final int imageId;
   final String imageUrl;
-
-  ///////////////////////////////////////////////////////////////
-
-  // *********** * Constructor. ********** /
+ // *********** * Constructor. ********** /
   ImageModel({
     required this.imageId,
     required this.imageUrl,
