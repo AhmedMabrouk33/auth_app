@@ -19,7 +19,6 @@ abstract class PostWebRequestServices {
   });
 
   Future<RESPONSE_MAP_TYPE> authRequest({
-    String? userName,
     required String endPoint,
     required RESPONSE_MAP_TYPE body,
   });
@@ -28,11 +27,11 @@ abstract class PostWebRequestServices {
 class DioPostWebRequestService implements PostWebRequestServices {
   @override
   Future<RESPONSE_MAP_TYPE> authRequest({
-    String? userName,
     required String endPoint,
     required RESPONSE_MAP_TYPE body,
   }) async {
     final String postBody = jsonEncode(body);
+
     try {
       final Response jsonResponse = await dioConnection.post(
         endPoint,
@@ -45,6 +44,7 @@ class DioPostWebRequestService implements PostWebRequestServices {
           'Bearer' + responseBody['jwt'];
       responseBody.remove('jwt');
       responseBody[RESPONSE_STATUS_CODE_KEY] = jsonResponse.statusCode;
+
       return responseBody;
     } catch (error) {
       return {RESPONSE_STATUS_CODE_KEY: -1};

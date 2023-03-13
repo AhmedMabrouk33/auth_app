@@ -30,16 +30,19 @@ class ClientModel {
   // ************** * From web service. ************** /
   factory ClientModel.fromWebServices(Map<String, dynamic> json,
       {required String password}) {
-    List<ClientLocationModel> tempClientLocation = [];
+    List<ClientLocationModel> tempClientLocations = [];
 
-    if (json['attributes']['clientlocation']['data'].isNotEmpty) {
+    print(
+        'Client location attribute is ${json['attributes']['clientlocations']}');
+
+    if (json['attributes']['clientlocations']['data'].isNotEmpty) {
       final int lengthOfJson =
-          json['attributes']['clientlocation']['data'].length;
+          json['attributes']['clientlocations']['data'].length;
 
       for (int index = 0; index < lengthOfJson; index++) {
-        tempClientLocation.add(
+        tempClientLocations.add(
           ClientLocationModel.fromWebService(
-            json['attributes']['clientlocation']['data'],
+            json['attributes']['clientlocations']['data'][index],
           ),
         );
       }
@@ -59,7 +62,7 @@ class ClientModel {
               isAttributeJson: true,
             )
           : null,
-      clientLocation: tempClientLocation,
+      clientLocation: tempClientLocations,
     );
   }
 
@@ -73,6 +76,11 @@ class ClientModel {
       'image': clientImage != null ? clientImage!.imageId : null,
       'user': user.userId,
     };
+  }
+
+  @override
+  String toString() {
+    return 'ClientModel(clientId: $clientId, phoneNo: $phoneNo, dateOfBirth: $dateOfBirth, user: $user, clientLocation: $clientLocation, clientImage: $clientImage)';
   }
 }
 
@@ -175,8 +183,8 @@ class UserModel {
 class ClientLocationModel {
   final int clientLocationId;
   String locationName;
-  int buildingNo;
-  int floorNo;
+  String buildingNo;
+  String floorNo;
   String address;
   String area;
   String city;
@@ -199,10 +207,10 @@ class ClientLocationModel {
   // *********** * From web service. ********** /
   factory ClientLocationModel.fromWebService(Map<String, dynamic> json) {
     return ClientLocationModel(
-      clientLocationId: json['id'] ?? 0,
+      clientLocationId: (json['id'] as int?) ?? 0,
       locationName: json['attributes']['name'] ?? '',
-      buildingNo: json['attributes']['buildingno'] ?? 0,
-      floorNo: json['attributes']['floorno'] ?? 0,
+      buildingNo: json['attributes']['buildingno'] ?? '',
+      floorNo: json['attributes']['floorno'] ?? '',
       address: json['attributes']['address'] ?? '',
       area: json['attributes']['area'] ?? '',
       city: json['attributes']['city'] ?? '',
@@ -230,6 +238,11 @@ class ClientLocationModel {
   }
 
   ///////////////////////////////////////////////////////////////
+
+  @override
+  String toString() {
+    return 'ClientLocationModel(clientLocationId: $clientLocationId, locationName: $locationName, buildingNo: $buildingNo, floorNo: $floorNo, address: $address, area: $area, city: $city)';
+  }
 }
 
 ///////////////////////////////////////////////////////////////

@@ -30,6 +30,9 @@ class AuthWebServices {
       body: tempUserObject.toWebService(isLogin: true),
     );
 
+    print(
+        'userResponse[RESPONSE_STATUS_CODE_KEY] is ${userResponse[RESPONSE_STATUS_CODE_KEY]}');
+
     if (userResponse[RESPONSE_STATUS_CODE_KEY] == 200) {
       tempUserObject = UserModel.fromWebService(
         userResponse['user'],
@@ -59,7 +62,7 @@ class AuthWebServices {
 
     if (clientResponse[RESPONSE_STATUS_CODE_KEY] == 200) {
       tempClientObject = ClientModel.fromWebServices(
-        clientResponse,
+        clientResponse['data'].first,
         password: password,
       );
     }

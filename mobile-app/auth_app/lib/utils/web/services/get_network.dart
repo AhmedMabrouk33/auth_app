@@ -52,6 +52,8 @@ class DioGetWebRequestService implements GetWebRequestServices {
 
     queryParameters.addEntries(POPULATE_API_QUERY.entries);
 
+    
+
     // * Try to send request.
     try {
       final Response response = await dioConnection.get(
@@ -61,6 +63,7 @@ class DioGetWebRequestService implements GetWebRequestServices {
 
       final RESPONSE_MAP_TYPE returnMap = response.data;
       returnMap[RESPONSE_STATUS_CODE_KEY] = response.statusCode;
+      
       return returnMap;
     } catch (error) {
       return {RESPONSE_STATUS_CODE_KEY: -1};

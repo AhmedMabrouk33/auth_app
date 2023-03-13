@@ -20,7 +20,7 @@ class _AuthScreenState extends State<AuthScreen> {
   void initState() {
     super.initState();
     _authUi = AuthUi(
-      authAction: context.read<AuthCubit>(),
+      authActions: context.read<AuthCubit>(),
       settingAction: context.read<AppSettingCubit>(),
     );
   }
@@ -123,6 +123,63 @@ class _AuthScreenState extends State<AuthScreen> {
           builder: (context, state) {
             // TODO: Check that State is complete state Navigate to address screen.
             return WillPopScope(
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  textDirection: TextDirection.ltr,
+                  children: [
+                    // **** * Welcome UI ******* /
+                    if (state.currentAuthScreenState ==
+                        AuthScreenStateEnum.welcomeState)
+                      ..._authUi.welcomeUi().toList()
+
+                    // **** * Login UI ******* /
+
+                    else if (state.currentAuthScreenState ==
+                        AuthScreenStateEnum.loginState)
+                      ..._authUi.loginUi()
+
+                    // **** * Sign up UI ******* /
+                    else if (state.currentAuthScreenState ==
+                        AuthScreenStateEnum.signUpState) ...[
+                      Center(
+                        child: ElevatedButton(
+                          onPressed: () => context
+                              .read<AuthCubit>()
+                              .changeScreenStateAction(
+                                  AuthScreenStateEnum.errorState),
+                          child: Text('Press me2'),
+                        ),
+                      )
+                    ]
+
+                    // **** * Loading UI ******* /
+                    else if (state.currentAuthScreenState ==
+                        AuthScreenStateEnum.loadingState)
+                      ..._authUi.loadingUi()
+
+                    // **** * Error UI ******* /
+                    else if (state.currentAuthScreenState ==
+                        AuthScreenStateEnum.errorState)
+                      ..._authUi.errorUi(state.errorMessage)
+
+                    // **** * Other ******* /
+                    else ...[
+                      Center(
+                        child: ElevatedButton(
+                          onPressed: () => context
+                              .read<AuthCubit>()
+                              .changeScreenStateAction(
+                                  AuthScreenStateEnum.errorState),
+                          child: Text('Press me2'),
+                        ),
+                      )
+                    ]
+                  ],
+                ),
+              ),
               onWillPop: () async {
                 switch (state.currentAuthScreenState) {
                   case AuthScreenStateEnum.loginState:
@@ -140,50 +197,6 @@ class _AuthScreenState extends State<AuthScreen> {
 
                 return false;
               },
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    // **** * Welcome UI ******* /
-                    if (state.currentAuthScreenState ==
-                        AuthScreenStateEnum.welcomeState)
-                      ..._authUi.welcomeUi().toList()
-
-                    // **** * Login UI ******* /
-
-                    else if (state.currentAuthScreenState ==
-                        AuthScreenStateEnum.loginState) ...[
-                      Center(
-                        child: ElevatedButton(
-                          onPressed: () => context
-                              .read<AuthCubit>()
-                              .changeScreenStateAction(
-                                  AuthScreenStateEnum.signUpState),
-                          child: Text('Press me1'),
-                        ),
-                      )
-                    ]
-
-                    // **** * Sign up UI ******* /
-                    else ...[
-                      Center(
-                        child: ElevatedButton(
-                          onPressed: () => context
-                              .read<AuthCubit>()
-                              .changeScreenStateAction(
-                                  AuthScreenStateEnum.errorState),
-                          child: Text('Press me2'),
-                        ),
-                      )
-                    ]
-
-                    // **** * Loading UI ******* /
-
-                    // **** * Error UI ******* /
-                  ],
-                ),
-              ),
             );
           },
         ),
