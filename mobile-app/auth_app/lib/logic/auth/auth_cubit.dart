@@ -16,23 +16,29 @@ enum AuthScreenStateEnum {
 }
 
 class AuthCubit extends Cubit<AuthCubitState> {
-  AuthScreenStateEnum _privateScreenState = AuthScreenStateEnum.welcomeState;
+  AuthScreenStateEnum _previousScreenState = AuthScreenStateEnum.welcomeState;
   AuthRepository _repository = AuthRepository();
-  
+
   AuthCubit()
       : super(
           AuthCubitState(
-            currentAuthScreenState: AuthScreenStateEnum.loadingState,
+            currentAuthScreenState: AuthScreenStateEnum.welcomeState,
           ),
         );
 
   ///////////////////////////////////////////////////////////////////////////////
-  
+
   // ************* * Global Actions. *********** /
-  
+
+  void goToPreviousScreenStateAction() {
+    emit(AuthCubitState(currentAuthScreenState: _previousScreenState));
+  }
+
   void changeScreenStateAction(AuthScreenStateEnum newScreenState) {
-    _privateScreenState = newScreenState;
+    _previousScreenState = newScreenState;
+    print(state.currentAuthScreenState);
     emit(AuthCubitState(currentAuthScreenState: newScreenState));
+    print(state.currentAuthScreenState);
   }
 
   void changePasswordState({
@@ -49,7 +55,7 @@ class AuthCubit extends Cubit<AuthCubitState> {
   }
 
   void loginAction({required String email, required String password}) {}
-  
+
   void signUpAction({
     required String userName,
     required String email,
@@ -61,5 +67,8 @@ class AuthCubit extends Cubit<AuthCubitState> {
   }) {}
 
   ///////////////////////////////////////////////////////////////////////////////
+  
+  
+
   ///////////////////////////////////////////////////////////////////////////////
 }

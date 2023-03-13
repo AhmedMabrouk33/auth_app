@@ -1,10 +1,7 @@
 import 'package:dartz/dartz.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../utils/data/universal_data.dart';
-import '../models/imagemodel.dart';
 import '../models/clientmodel.dart';
-
 import '../web/auth_web_services.dart';
 
 class AuthRepository {
