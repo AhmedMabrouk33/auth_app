@@ -25,9 +25,11 @@ class AuthCubit extends Cubit<AuthCubitState> {
   AuthCubit()
       : super(
           AuthCubitState(
-            currentAuthScreenState: AuthScreenStateEnum.welcomeState,
+            currentAuthScreenState: AuthScreenStateEnum.loadingState,
           ),
-        );
+        ) {
+    _readUserCached();
+  }
 
   ///////////////////////////////////////////////////////////////////////////////
 
@@ -73,18 +75,16 @@ class AuthCubit extends Cubit<AuthCubitState> {
       );
 
       repositorySide.fold(
-        (repositoryErrorMessage) => emit(
+        (leftSideMessage) => emit(
           AuthCubitState(
             currentAuthScreenState: AuthScreenStateEnum.errorState,
-            errorMessage: repositoryErrorMessage,
+            errorMessage: leftSideMessage,
           ),
         ),
-        (repositoryClient) {
-          print('\n\n\n\n\n\nWelcome to client side\n\n\n\n\n\n\n');
-          clientData = repositoryClient;
+        (right) async {
+          clientData = right;
 
-          print('Read client data is ${repositoryClient.toString()}');
-          print('Read client data is ${clientData.toString()}');
+          await _repository.saveCached(clientData.user);
 
           emit(
             AuthCubitState(
@@ -119,7 +119,17 @@ class AuthCubit extends Cubit<AuthCubitState> {
 
   // ************* * Private method. *********** /
 
-  void _readUserCahed() {}
+  void _readUserCached() async {
+    UserModel? tempUser = await _repository.readCached();
+
+    if (tempUser != null && tempUser.isAutoLogin) {
+      loginAction(email: tempUser.email, password: tempUser.password);
+    } else {
+      emit(AuthCubitState(
+          currentAuthScreenState: AuthScreenStateEnum.welcomeState));
+    }
+  }
+
   bool _verifyLoginData({required String email, required String password}) {
     if (email.isNotEmpty && password.isNotEmpty) {
       return true;

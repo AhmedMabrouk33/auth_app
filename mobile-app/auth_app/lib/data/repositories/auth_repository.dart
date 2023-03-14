@@ -3,10 +3,12 @@ import 'package:dartz/dartz.dart';
 import '../../utils/data/universal_data.dart';
 import '../models/clientmodel.dart';
 import '../web/auth_web_services.dart';
+import '../local_services/auth_local_service.dart';
 
 class AuthRepository {
+  // ******************* * Private attributes. **************** /
   final AuthWebServices _webServices = AuthWebServices();
-  
+  final AuthLocalService _localService = AuthLocalService();
 
   //////////////////////////////////////////////////////////////////////////////////
 
@@ -54,9 +56,14 @@ class AuthRepository {
 
   /// ***************** * Read cached Method. ***************** /
 
-  // Future<Either<String,ClientModel>> loginWeb
+  UserModel? readCached() {
+    return _localService.readCachedRequest();
+  }
 
   ///////////////////////////////////////////////////////
 
   /// ***************** * Save cached Method. ***************** /
+  Future<bool> saveCached(UserModel userModel) async {
+    return _localService.saveCachedRequest(userModel.toLocalService());
+  }
 }
