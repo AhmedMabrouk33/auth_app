@@ -20,7 +20,7 @@ enum AuthScreenStateEnum {
 
 class AuthCubit extends Cubit<AuthCubitState> {
   AuthScreenStateEnum _previousScreenState = AuthScreenStateEnum.welcomeState;
-  AuthRepository _repository = AuthRepository();
+  final AuthRepository _repository = AuthRepository();
 
   AuthCubit()
       : super(
