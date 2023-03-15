@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 class CityModel {
   final String nameEN;
   final String nameAR;
-  final List<_AreaModel> areas;
+  final List<AreaModel> areas;
 
   ///////////////////////////////////////////////////////////////
 
@@ -20,12 +20,12 @@ class CityModel {
 
   // ************** * From web services. ************** /
   factory CityModel.fromWebService(Map<String, dynamic> json) {
-    List<_AreaModel> tempAreas = [];
+    List<AreaModel> tempAreas = [];
     if (json['attributes']['areas']['data'].isNotEmpty) {
       int areaLength = json['attributes']['areas']['data'].length;
       for (int index = 0; index < areaLength; index++) {
         tempAreas.add(
-          _AreaModel.fromWebService(
+          AreaModel.fromWebService(
             json['attributes']['areas']['data'][index],
           ),
         );
@@ -48,7 +48,7 @@ class CityModel {
 ///////////////////////////////////////////////////////////////
 
 /// Areas Model {Private class}.
-class _AreaModel {
+class AreaModel {
   final String nameEN;
   final String nameAR;
 
@@ -56,7 +56,7 @@ class _AreaModel {
 
   // ************** * Constructor. ************** /
 
-  _AreaModel({
+  AreaModel({
     required this.nameEN,
     required this.nameAR,
   });
@@ -64,8 +64,8 @@ class _AreaModel {
   ///////////////////////////////////////////////////////////////
 
   // ************** * From web services. ************** /
-  factory _AreaModel.fromWebService(Map<String, dynamic> json) {
-    return _AreaModel(
+  factory AreaModel.fromWebService(Map<String, dynamic> json) {
+    return AreaModel(
       nameEN: json['attributes']['nameen'],
       nameAR: json['attributes']['namear'],
     );

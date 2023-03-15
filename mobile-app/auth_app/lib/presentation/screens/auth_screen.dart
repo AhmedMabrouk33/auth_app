@@ -1,9 +1,14 @@
-import 'package:auth_app/logic/auth/auth_cubit.dart';
-import 'package:auth_app/logic/setting/appsetting_cubit.dart';
-import 'package:auth_app/presentation/ui/auth_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../ui/auth_ui.dart';
+import '../ui/global/global_ui.dart';
+import '../router/screens_name.dart';
+
+import '../../logic/auth/auth_cubit.dart';
+import '../../logic/setting/appsetting_cubit.dart';
 import '../../logic/connection/network_connection_cubit.dart';
+
 import '../../utils/colors/color_configuration.dart';
 import '../../utils/data/universal_data.dart';
 
@@ -34,94 +39,22 @@ class _AuthScreenState extends State<AuthScreen> {
         child: BlocBuilder<NetworkConnectionCubit, NetworkConnectionState>(
           builder: (context, state) => state is InternetConnectedState
               ? _authScreens()
-              : _noInternetConnectionWidget(),
+              : noInternetConnectionUi(),
         ),
-      ),
-    );
-  }
-
-  Widget _noInternetConnectionWidget() {
-    return WillPopScope(
-      onWillPop: () async => false,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text(
-            appLanguage == 'en' ? 'Oups!' : 'للاسف',
-            style: TextStyle(
-              height: 1,
-              fontSize: 35,
-              fontWeight: FontWeight.w700,
-              color: HexColor('#DC395F'),
-              // TODO: Add Family.
-            ),
-          ),
-
-          // ? Spacing.
-          // const SizedBox(height: 50),
-
-          // Image.
-          Image.asset(
-            'assets/images/error_connection_image.png',
-            fit: BoxFit.cover,
-          ),
-
-          // -~ Message.
-          Text(
-            appLanguage == 'en' ? 'SomeThing went wrong' : 'هناك خطأ ما',
-            style: TextStyle(
-              height: 1,
-              fontSize: 25,
-              fontWeight: FontWeight.w700,
-              color: HexColor('#FDFDFD'),
-              // TODO: Add Family.
-            ),
-          ),
-
-          // ? Spacing.
-          // const SizedBox(height: 10),
-
-          // -~ Message.
-          Text(
-            appLanguage == 'en'
-                ? 'Please check \nyour internet connection'
-                : 'يرجى المراجعة\nاتصالك بالإنترنت',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              height: 1,
-              fontSize: 25,
-              fontWeight: FontWeight.w700,
-              color: HexColor('#DC395F'),
-              // TODO: Add Family.
-            ),
-          ),
-        ],
       ),
     );
   }
 
   Widget _authScreens() {
     return BlocSelector<AppSettingCubit, AppSettingState, String>(
-      selector: (state) {
-        print('State is $state');
-        return state.languageSetting;
-      },
+      selector: (state) => state.languageSetting,
       builder: (context, languageState) => Directionality(
         textDirection:
             languageState == 'ar' ? TextDirection.rtl : TextDirection.ltr,
         child: BlocBuilder<AuthCubit, AuthCubitState>(
-          buildWhen: (previous, current) {
-            // BUG Delete this print method.
-            print(
-              'Previous screenState name is ${previous.currentAuthScreenState}, \nCurrent Screen State name is ${current.currentAuthScreenState}',
-            );
-
-            return previous.currentAuthScreenState !=
-                current.currentAuthScreenState;
-          },
+          buildWhen: (previous, current) =>
+              previous.currentAuthScreenState != current.currentAuthScreenState,
           builder: (context, state) {
-            // TODO: Check that State is complete state Navigate to address screen.
             return WillPopScope(
               child: SingleChildScrollView(
                 child: Column(
@@ -136,7 +69,6 @@ class _AuthScreenState extends State<AuthScreen> {
                       ..._authUi.welcomeUi().toList()
 
                     // **** * Login UI ******* /
-
                     else if (state.currentAuthScreenState ==
                         AuthScreenStateEnum.loginState)
                       ..._authUi.loginUi()
@@ -158,25 +90,27 @@ class _AuthScreenState extends State<AuthScreen> {
                     // **** * Loading UI ******* /
                     else if (state.currentAuthScreenState ==
                         AuthScreenStateEnum.loadingState)
-                      ..._authUi.loadingUi()
+                      ...loadingUi(null)
 
                     // **** * Error UI ******* /
                     else if (state.currentAuthScreenState ==
                         AuthScreenStateEnum.errorState)
-                      ..._authUi.errorUi(state.errorMessage)
+                      ...errorUi(
+                        errorMessage: state.errorMessage,
+                        onPressed: context
+                            .read<AuthCubit>()
+                            .goToPreviousScreenStateAction,
+                      )
+                    // ..._authUi.errorUi(state.errorMessage)
 
                     // **** * Other ******* /
-                    else ...[
-                      Center(
-                        child: ElevatedButton(
-                          onPressed: () => context
-                              .read<AuthCubit>()
-                              .changeScreenStateAction(
-                                  AuthScreenStateEnum.errorState),
-                          child: Text('Press me2'),
+                    else
+                      ...loadingUi(
+                        () => Future.delayed(
+                          const Duration(milliseconds: 20),
+                          _navigateToNextScreen,
                         ),
-                      )
-                    ]
+                      ),
                   ],
                 ),
               ),
@@ -201,6 +135,12 @@ class _AuthScreenState extends State<AuthScreen> {
           },
         ),
       ),
+    );
+  }
+
+  void _navigateToNextScreen() {
+    Navigator.of(context).popAndPushNamed(
+      clientData.clientLocation.isNotEmpty ? HOME_SCREEN : ADDRESS_SCREEN,
     );
   }
 }

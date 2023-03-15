@@ -7,10 +7,6 @@ abstract class NetworkConnectionState extends Equatable {
   List<Object> get props => [];
 }
 
-
-class InternetConnectionLoading extends NetworkConnectionState {}
-
 class InternetConnectedState extends NetworkConnectionState {}
 
 class NoInternetConnectedState extends NetworkConnectionState {}
-

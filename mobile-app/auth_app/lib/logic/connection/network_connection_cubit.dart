@@ -5,7 +5,7 @@ import 'package:equatable/equatable.dart';
 part 'network_connection_state.dart';
 
 class NetworkConnectionCubit extends Cubit<NetworkConnectionState> {
-  NetworkConnectionCubit() : super(InternetConnectionLoading()) {
+  NetworkConnectionCubit() : super(InternetConnectedState()) {
     // -~ Listener for Connectivity.
     Connectivity().onConnectivityChanged.listen(
       (internetEvent) {

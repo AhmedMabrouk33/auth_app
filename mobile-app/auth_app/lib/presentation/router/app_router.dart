@@ -5,8 +5,10 @@ import 'screens_name.dart';
 
 import '../screens/auth_screen.dart';
 import '../screens/home_screen.dart';
+import '../screens/address_screen.dart';
 
 import '../../logic/auth/auth_cubit.dart';
+import '../../logic/address/address_cubit.dart';
 import '../../logic/connection/network_connection_cubit.dart';
 
 class AppRouter {
@@ -20,6 +22,16 @@ class AppRouter {
               BlocProvider(create: (context) => AuthCubit()),
             ],
             child: const AuthScreen(),
+          ),
+        );
+      case ADDRESS_SCREEN:
+        return MaterialPageRoute(
+          builder: (context) => MultiBlocProvider(
+            providers: [
+              BlocProvider(create: (context) => NetworkConnectionCubit()),
+              BlocProvider(create: (context) => AddressCubit()),
+            ],
+            child: const AddressScreen(),
           ),
         );
 

@@ -15,7 +15,7 @@ enum AuthScreenStateEnum {
   signUpState,
   loadingState,
   errorState,
-  succeedState,
+  completeState,
 }
 
 class AuthCubit extends Cubit<AuthCubitState> {
@@ -88,7 +88,7 @@ class AuthCubit extends Cubit<AuthCubitState> {
 
           emit(
             AuthCubitState(
-              currentAuthScreenState: AuthScreenStateEnum.succeedState,
+              currentAuthScreenState: AuthScreenStateEnum.completeState,
             ),
           );
         },

@@ -19,7 +19,9 @@ enum AddressScreenStateEnum {
 
 class AddressCubit extends Cubit<AddressState> {
   final AddressRepository _repository = AddressRepository();
-  final List<CityModel> availableCities = [];
+  final List<CityModel> _availableCitiesModels = [];
+  final List<String> citiesOptions = [];
+  final List<String> areasOptions = [];
   AddressScreenStateEnum privateScreenState =
       AddressScreenStateEnum.loadingState;
 
@@ -31,8 +33,7 @@ class AddressCubit extends Cubit<AddressState> {
       : super(
           const AddressState(
             addressScreenState: AddressScreenStateEnum.loadingState,
-            selectedAreaIndex: 0,
-            selectedCityIndex: 0,
+            selectedCity: '',
           ),
         ) {
     _readAvailableCities();
@@ -42,26 +43,30 @@ class AddressCubit extends Cubit<AddressState> {
 
   /// ************ * Public methods. ************ /
   void changeSelectedAddressAction(
-      {int? selectedCityIndex, int selectedAreaIndex = 0}) {
+      {String? selectedCityOption, String? selectedAreaOption}) {
+    if (selectedCityOption != null) {
+      print('Get new Selected city options');
+      _getAvailableAreasNames(selectedCityOption);
+    }
     emit(
       AddressState(
         addressScreenState: AddressScreenStateEnum.newAddressState,
-        selectedCityIndex: selectedCityIndex ?? state.selectedCityIndex,
-        selectedAreaIndex: selectedAreaIndex,
+        selectedCity: selectedCityOption ?? state.selectedCity,
+        selectedArea: selectedCityOption == null ? selectedAreaOption : null,
       ),
     );
   }
 
   ///////////////////////////////////////////////
 
-  void goToPreviousState() {
+  void goToPreviousStateAction() {
     emit(
       AddressState(
-        addressScreenState: availableCities.isNotEmpty
+        addressScreenState: _availableCitiesModels.isNotEmpty
             ? AddressScreenStateEnum.newAddressState
             : AddressScreenStateEnum.loadingState,
-        selectedCityIndex: state.selectedCityIndex,
-        selectedAreaIndex: state.selectedAreaIndex,
+        selectedCity: state.selectedCity,
+        selectedArea: state.selectedArea,
       ),
     );
   }
@@ -73,24 +78,20 @@ class AddressCubit extends Cubit<AddressState> {
     required String buildingNo,
     required String floorNo,
     required String address,
-    required int areaIndex,
-    required int cityIndex,
   }) async {
     ClientLocationModel? tempLocation = _verifyAddressEntities(
       tagName: tagName,
       buildingNo: buildingNo,
       floorNo: floorNo,
       address: address,
-      areaIndex: areaIndex,
-      cityIndex: cityIndex,
     );
 
     if (tempLocation != null) {
       emit(
         AddressState(
           addressScreenState: AddressScreenStateEnum.loadingState,
-          selectedAreaIndex: state.selectedAreaIndex,
-          selectedCityIndex: state.selectedCityIndex,
+          selectedArea: state.selectedArea,
+          selectedCity: state.selectedCity,
         ),
       );
 
@@ -102,8 +103,8 @@ class AddressCubit extends Cubit<AddressState> {
               (leftMessage) => emit(
                 AddressState(
                   addressScreenState: AddressScreenStateEnum.errorState,
-                  selectedAreaIndex: state.selectedAreaIndex,
-                  selectedCityIndex: state.selectedCityIndex,
+                  selectedArea: state.selectedArea,
+                  selectedCity: state.selectedCity,
                   errorMessage: leftMessage,
                 ),
               ),
@@ -113,8 +114,8 @@ class AddressCubit extends Cubit<AddressState> {
                 emit(
                   AddressState(
                     addressScreenState: AddressScreenStateEnum.completeState,
-                    selectedAreaIndex: state.selectedAreaIndex,
-                    selectedCityIndex: state.selectedCityIndex,
+                    selectedArea: state.selectedArea,
+                    selectedCity: state.selectedCity,
                   ),
                 );
               },
@@ -124,8 +125,8 @@ class AddressCubit extends Cubit<AddressState> {
       emit(
         AddressState(
           addressScreenState: AddressScreenStateEnum.errorState,
-          selectedAreaIndex: state.selectedAreaIndex,
-          selectedCityIndex: state.selectedCityIndex,
+          selectedArea: state.selectedArea,
+          selectedCity: state.selectedCity,
           errorMessage: appLanguage == 'en'
               ? 'There is something missing data'
               : 'هناك شيء مفقود من البيانات',
@@ -133,11 +134,30 @@ class AddressCubit extends Cubit<AddressState> {
       );
     }
   }
-  
+
+  ///////////////////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////////////////
 
   /// ************ * Private methods. ************ /
+  void _getAvailableAreasNames(String selectedCityName) {
+    areasOptions.clear();
+    List<AreaModel> tempAreas = _availableCitiesModels
+        .singleWhere(
+          (city) =>
+              (appLanguage == 'en'
+                  ? (city.nameEN == selectedCityName)
+                  : (city.nameAR == selectedCityName)) ==
+              true,
+        )
+        .areas;
+    areasOptions.addAll(
+      tempAreas.map(
+        (area) => appLanguage == 'en' ? area.nameEN : area.nameAR,
+      ),
+    );
+  }
 
+  ///////////////////////////////////////////////////////////////////////////////
   void _readAvailableCities() {
     _repository.readCitiesRepository().then(
           (repositorySide) => repositorySide.fold(
@@ -145,18 +165,33 @@ class AddressCubit extends Cubit<AddressState> {
               AddressState(
                 addressScreenState: AddressScreenStateEnum.errorState,
                 errorMessage: leftMessage,
-                selectedAreaIndex: state.selectedAreaIndex,
-                selectedCityIndex: state.selectedCityIndex,
+                selectedArea: state.selectedArea,
+                selectedCity: state.selectedCity,
               ),
             ),
             (rightLocation) {
-              availableCities.addAll(rightLocation);
+              _availableCitiesModels.addAll(rightLocation);
+
+              citiesOptions.addAll(
+                _availableCitiesModels.map(
+                  (cityOption) => appLanguage == 'en'
+                      ? cityOption.nameEN
+                      : cityOption.nameAR,
+                ),
+              );
+
+              areasOptions.addAll(
+                _availableCitiesModels.first.areas.map(
+                  (areasOptions) => appLanguage == 'en'
+                      ? areasOptions.nameEN
+                      : areasOptions.nameAR,
+                ),
+              );
 
               emit(
                 AddressState(
                   addressScreenState: AddressScreenStateEnum.newAddressState,
-                  selectedAreaIndex: state.selectedAreaIndex,
-                  selectedCityIndex: state.selectedCityIndex,
+                  selectedCity: citiesOptions.first,
                 ),
               );
             },
@@ -171,31 +206,20 @@ class AddressCubit extends Cubit<AddressState> {
     required String buildingNo,
     required String floorNo,
     required String address,
-    required int areaIndex,
-    required int cityIndex,
   }) {
     if ((tagName.isNotEmpty) &&
         (buildingNo.isNotEmpty) &&
         (floorNo.isNotEmpty) &&
         (address.isNotEmpty) &&
-        (areaIndex != 0) &&
-        (cityIndex != 0)) {
-      final String selectedArea = appLanguage == 'en'
-          ? availableCities[cityIndex].areas[areaIndex].nameEN
-          : availableCities[cityIndex].areas[areaIndex].nameAR;
-
-      final String selectedCity = appLanguage == 'en'
-          ? availableCities[cityIndex].nameEN
-          : availableCities[cityIndex].nameAR;
-
+        (state.selectedArea != null)) {
       return ClientLocationModel(
         clientLocationId: -1,
         locationName: tagName,
         buildingNo: buildingNo,
         floorNo: floorNo,
         address: address,
-        area: selectedArea,
-        city: selectedCity,
+        area: state.selectedArea!,
+        city: state.selectedCity,
       );
     } else {
       return null;
